@@ -3,6 +3,7 @@ import { Search, Bell, Sun, Moon, Menu } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
+import logoUrl from '../../assets/logo.jpg';
 
 export function Navbar() {
   const { theme, setTheme, user, toggleSidebar, globalSearchQuery, setGlobalSearchQuery } = useAppStore();
@@ -46,8 +47,8 @@ export function Navbar() {
         </button>
         
         <div className="flex items-center gap-3 bg-card py-1.5 px-1.5 pr-4 rounded-[100px] shadow-[var(--shadow-clay-sm)] cursor-pointer hover:shadow-[var(--shadow-clay-hover)] transition-all">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-accent to-primary flex items-center justify-center text-white font-medium shadow-inner">
-            {user?.name.charAt(0)}
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-white font-medium shadow-inner overflow-hidden border border-black/5 dark:border-white/5">
+            <img src={logoUrl} alt="Avatar" className="w-full h-full object-cover" />
           </div>
           <div className="hidden lg:block">
             <p className="text-sm font-semibold">{user?.name}</p>

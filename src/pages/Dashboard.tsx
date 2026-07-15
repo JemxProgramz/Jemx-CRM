@@ -32,8 +32,8 @@ export function Dashboard() {
             <h3 className="font-semibold text-lg">Revenue Overview</h3>
             <p className="text-sm text-text-muted">Monthly revenue performance</p>
           </div>
-          <div className="flex-1 w-full min-h-0">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="flex-1 w-full min-h-[200px]">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
@@ -59,8 +59,8 @@ export function Dashboard() {
             <h3 className="font-semibold text-lg">Sales by Plan</h3>
             <p className="text-sm text-text-muted">Distribution of active subscriptions</p>
           </div>
-          <div className="flex-1 w-full min-h-0 relative flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="flex-1 w-full min-h-[200px] relative flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <PieChart>
                 <Pie
                   data={salesData}
@@ -120,7 +120,7 @@ export function Dashboard() {
             <p className="text-sm text-text-muted">Comparing actual vs targets</p>
           </div>
           <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <BarChart data={revenueData.slice(0, 5)} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="opacity-10" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)' }} dy={10} />

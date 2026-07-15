@@ -8,6 +8,7 @@ import { Input } from '../components/ui/Input';
 import { useAppStore } from '../store/useAppStore';
 import { useToastStore } from '../store/useToastStore';
 import { Camera } from 'lucide-react';
+import logoUrl from '../assets/logo.jpg';
 
 const profileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -74,8 +75,8 @@ export function Settings() {
           <form onSubmit={handleProfileSubmit(onProfileSave)} className="space-y-6">
             <div className="flex items-center gap-6">
               <div className="relative group cursor-pointer">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-accent to-primary flex items-center justify-center text-white text-3xl font-medium shadow-[var(--shadow-clay-sm)] overflow-hidden">
-                  {user?.name.charAt(0)}
+                <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center text-white text-3xl font-medium shadow-[var(--shadow-clay-sm)] overflow-hidden border border-black/5 dark:border-white/5">
+                  <img src={logoUrl} alt="Avatar" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <Camera className="w-8 h-8 text-white" />
                   </div>

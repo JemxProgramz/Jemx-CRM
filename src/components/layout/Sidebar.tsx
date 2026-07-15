@@ -34,13 +34,13 @@ export function Sidebar() {
         animate={{ width: sidebarOpen ? 280 : 88 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className={cn(
-          "h-[calc(100vh-2rem)] flex flex-col bg-card rounded-[28px] shadow-[var(--shadow-clay)] m-4 py-8 px-4 overflow-visible absolute md:relative z-50 transition-transform duration-300 md:!translate-x-0",
+          "h-[calc(100vh-2rem)] flex flex-col bg-card rounded-[28px] shadow-[var(--shadow-clay)] m-4 py-6 px-4 overflow-visible absolute md:relative z-50 transition-transform duration-300 md:!translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-[150%]"
         )}
       >
-      <div className={cn("flex items-center mb-12 overflow-hidden transition-all", sidebarOpen ? "px-2" : "justify-center px-0")}>
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-[var(--shadow-clay-sm)] overflow-hidden bg-white">
-          <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
+      <div className={cn("flex items-center mb-8 transition-all min-h-[48px]", sidebarOpen ? "px-2" : "justify-center px-0")}>
+        <div className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-xl flex items-center justify-center shrink-0 shadow-[var(--shadow-clay-sm)] overflow-hidden bg-white border border-black/5 dark:border-white/5">
+          <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
         </div>
         <AnimatePresence initial={false}>
           {sidebarOpen && (
@@ -49,7 +49,7 @@ export function Sidebar() {
               animate={{ opacity: 1, width: "auto" }} 
               exit={{ opacity: 0, width: 0 }}
               transition={{ duration: 0.2 }}
-              className="font-bold text-xl tracking-tight overflow-hidden whitespace-nowrap"
+              className="font-bold text-xl tracking-tight whitespace-nowrap overflow-hidden"
             >
               <span className="pl-3">Jemx CRM</span>
             </motion.span>
