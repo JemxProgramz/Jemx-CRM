@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+
+  --shadow-clay: var(--shadow-clay);
+  --shadow-clay-hover: var(--shadow-clay-hover);
+  --shadow-clay-active: var(--shadow-clay-active);
+  --shadow-clay-sm: var(--shadow-clay-sm);
+
+  --radius-clay: 28px;
+  --radius-clay-sm: 16px;
+  --radius-clay-full: 9999px;
+}
+
+@layer base {
+  :root {
+    --background: #EEF2FF;
+    --card: #F8FAFF;
+    --primary: #6366F1;
+    --secondary: #8B5CF6;
+    --accent: #14B8A6;
+    --success: #22C55E;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --text: #1E293B;
+    --text-muted: #64748B;
+    
+    --shadow-clay: 
+      12px 12px 24px rgba(175, 186, 227, 0.5), 
+      -12px -12px 24px rgba(255, 255, 255, 0.8),
+      inset -4px -4px 8px rgba(175, 186, 227, 0.1),
+      inset 4px 4px 8px rgba(255, 255, 255, 0.4);
+      
+    --shadow-clay-hover: 
+      16px 16px 32px rgba(175, 186, 227, 0.6), 
+      -16px -16px 32px rgba(255, 255, 255, 0.9),
+      inset -2px -2px 6px rgba(175, 186, 227, 0.1),
+      inset 2px 2px 6px rgba(255, 255, 255, 0.5);
+
+    --shadow-clay-active: 
+      inset 8px 8px 16px rgba(175, 186, 227, 0.5), 
+      inset -8px -8px 16px rgba(255, 255, 255, 0.8);
+      
+    --shadow-clay-sm: 
+      6px 6px 12px rgba(175, 186, 227, 0.5), 
+      -6px -6px 12px rgba(255, 255, 255, 0.8);
+  }
+
+  .dark {
+    --background: #0F172A;
+    --card: #1E293B;
+    --primary: #818CF8;
+    --secondary: #A78BFA;
+    --text: #F8FAFC;
+    --text-muted: #94A3B8;
+
+    --shadow-clay: 
+      12px 12px 24px rgba(0, 0, 0, 0.3), 
+      -12px -12px 24px rgba(45, 60, 85, 0.3),
+      inset -4px -4px 8px rgba(0, 0, 0, 0.1),
+      inset 4px 4px 8px rgba(45, 60, 85, 0.1);
+      
+    --shadow-clay-hover: 
+      16px 16px 32px rgba(0, 0, 0, 0.4), 
+      -16px -16px 32px rgba(45, 60, 85, 0.4);
+
+    --shadow-clay-active: 
+      inset 8px 8px 16px rgba(0, 0, 0, 0.4), 
+      inset -8px -8px 16px rgba(45, 60, 85, 0.3);
+      
+    --shadow-clay-sm: 
+      6px 6px 12px rgba(0, 0, 0, 0.3), 
+      -6px -6px 12px rgba(45, 60, 85, 0.3);
+  }
+}
+
+body {
+  @apply bg-background text-text font-sans antialiased;
+}
+
+.blob-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  background-color: var(--background);
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  animation: float 20s infinite ease-in-out alternate;
+}
+
+.blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--primary); animation-delay: 0s; }
+.blob-2 { top: 40%; right: -20%; width: 40vw; height: 40vw; background: var(--secondary); animation-delay: -5s; }
+.blob-3 { bottom: -20%; left: 20%; width: 60vw; height: 60vw; background: var(--accent); animation-delay: -10s; }
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(5%, 5%) scale(1.1); }
+  100% { transform: translate(-5%, 10%) scale(0.9); }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-text-muted/20 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-text-muted/40;
+}

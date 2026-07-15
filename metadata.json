@@ -1,0 +1,6 @@
+{
+  "name": "Jemx CRM",
+  "description": "A premium, production-quality SaaS CRM Dashboard with a Claymorphism design language.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
