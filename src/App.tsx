@@ -13,21 +13,18 @@ import { Customers } from './pages/Customers';
 import { Orders } from './pages/Orders';
 import { Settings } from './pages/Settings';
 
+import { Analytics } from './pages/Analytics';
 import { Reports } from './pages/Reports';
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const user = useAppStore(state => state.user);
-  if (!user) return <Navigate to="/login" replace />;
-  return <Layout>{children}</Layout>;
-}
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 export default function App() {
-  const user = useAppStore(state => state.user);
+  const isAuthenticated = useAppStore(state => state.isAuthenticated);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} />
         
         <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
@@ -35,7 +32,7 @@ export default function App() {
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         
         {/* Fallbacks for demo */}
-        <Route path="/analytics" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
         <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
         
         <Route path="*" element={<Navigate to="/" replace />} />

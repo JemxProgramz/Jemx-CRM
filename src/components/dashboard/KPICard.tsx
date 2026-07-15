@@ -13,9 +13,9 @@ interface KPICardProps {
 
 export function KPICard({ title, value, percentage, icon: Icon, trend }: KPICardProps) {
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col group hover:-translate-y-1 transition-transform duration-300">
       <div className="flex items-center justify-between mb-4">
-        <div className="p-3 bg-background rounded-2xl shadow-[var(--shadow-clay-active)] text-primary">
+        <div className="p-3 bg-background rounded-2xl shadow-[var(--shadow-clay-active)] text-primary transition-transform duration-300 group-hover:scale-110">
           <Icon className="w-6 h-6" />
         </div>
         <div className={`flex items-center gap-1 text-sm font-semibold px-2.5 py-1 rounded-full shadow-[var(--shadow-clay-sm)] ${trend === 'up' ? 'text-success bg-success/10' : 'text-danger bg-danger/10'}`}>

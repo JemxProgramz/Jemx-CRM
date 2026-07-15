@@ -21,12 +21,23 @@ export function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const login = useAppStore(state => state.login);
   
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema)
   });
 
   const onSubmit = async (data: LoginForm) => {
-    login({ id: '1', name: 'Alex Doe', email: data.email, role: 'Admin' });
+    try {
+      // Mock validation
+      if (data.email === 'admin@jemxcrm.com' && data.password === 'password123') {
+        login({ id: '1', name: 'Admin User', email: data.email, role: 'Admin' });
+        // The App component will redirect automatically since we conditionally render Login or Navigate
+      } else {
+        // Set root form error
+        setError('root', { type: 'manual', message: 'Invalid email or password' });
+      }
+    } catch (err) {
+      setError('root', { type: 'manual', message: 'An error occurred during login' });
+    }
   };
 
   return (
@@ -50,9 +61,15 @@ export function Login() {
             </div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">Welcome Back</h1>
             <p className="text-text-muted">Sign in to Jemx CRM to continue</p>
+            <p className="text-xs text-text-muted mt-2">Hint: Use <strong>admin@jemxcrm.com</strong> / <strong>password123</strong></p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {errors.root && (
+              <div className="p-3 bg-danger/10 text-danger rounded-xl text-sm font-medium border border-danger/20">
+                {errors.root.message}
+              </div>
+            )}
             <div className="space-y-1">
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />

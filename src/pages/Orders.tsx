@@ -18,8 +18,9 @@ import { useAppStore } from '../store/useAppStore';
 import { useToastStore } from '../store/useToastStore';
 import { format } from 'date-fns';
 
-const columnHelper = createColumnHelper<Order>();
+import { Trash2 } from 'lucide-react';
 
+const columnHelper = createColumnHelper<Order>();
 const columns = [
   columnHelper.accessor('id', {
     header: 'Order ID',
@@ -60,17 +61,29 @@ const columns = [
   }),
   columnHelper.display({
     id: 'actions',
-    cell: () => (
-      <Button variant="ghost" size="icon" className="h-8 w-8 text-text-muted hover:text-text">
-        <MoreHorizontal className="w-4 h-4" />
+    cell: (info) => (
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="h-8 w-8 text-danger hover:text-white hover:bg-danger"
+        onClick={() => {
+          useAppStore.getState().deleteOrder(info.row.original.id);
+          useToastStore.getState().addToast({
+            type: 'success',
+            message: `Order ${info.row.original.id} was deleted.`
+          });
+        }}
+      >
+        <Trash2 className="w-4 h-4" />
       </Button>
     ),
   }),
 ];
 
 export function Orders() {
-  const { orders: data, globalSearchQuery, setGlobalSearchQuery } = useAppStore();
+  const { orders: data } = useAppStore();
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [localSearch, setLocalSearch] = useState('');
 
   const handleExportCSV = () => {
     const headers = ['Order ID', 'Customer', 'Amount', 'Date', 'Status', 'Payment'];
@@ -105,10 +118,10 @@ export function Orders() {
     columns,
     state: {
       sorting,
-      globalFilter: globalSearchQuery,
+      globalFilter: localSearch,
     },
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalSearchQuery,
+    onGlobalFilterChange: setLocalSearch,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -133,8 +146,8 @@ export function Orders() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
             <Input 
               placeholder="Search orders..." 
-              value={globalSearchQuery ?? ''}
-              onChange={e => setGlobalSearchQuery(e.target.value)}
+              value={localSearch}
+              onChange={e => setLocalSearch(e.target.value)}
               className="pl-12"
             />
           </div>

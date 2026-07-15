@@ -78,8 +78,9 @@ const columns = [
 ];
 
 export function Customers() {
-  const { customers: data, globalSearchQuery, setGlobalSearchQuery } = useAppStore();
+  const { customers: data } = useAppStore();
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [localSearch, setLocalSearch] = useState('');
 
   const handleAddCustomer = () => {
     const newCustomer: Customer = {
@@ -87,6 +88,7 @@ export function Customers() {
       name: `New Customer ${data.length + 1}`,
       email: `customer${data.length + 1}@example.com`,
       company: 'Acme Corp',
+      country: 'United States',
       plan: 'Pro',
       status: 'Active',
       joinDate: new Date().toISOString()
@@ -103,10 +105,10 @@ export function Customers() {
     columns,
     state: {
       sorting,
-      globalFilter: globalSearchQuery,
+      globalFilter: localSearch,
     },
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalSearchQuery,
+    onGlobalFilterChange: setLocalSearch,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -129,8 +131,8 @@ export function Customers() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
             <Input 
               placeholder="Search customers..." 
-              value={globalSearchQuery ?? ''}
-              onChange={e => setGlobalSearchQuery(e.target.value)}
+              value={localSearch}
+              onChange={e => setLocalSearch(e.target.value)}
               className="pl-12"
             />
           </div>

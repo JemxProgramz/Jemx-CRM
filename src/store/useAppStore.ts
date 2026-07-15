@@ -1,10 +1,17 @@
 import { create } from 'zustand';
-import { User, Customer, Order, Activity } from '../types';
+import { User, Customer, Order, Activity, AppNotification } from '../types';
 import { mockCustomers, mockOrders, mockActivities, revenueData, salesData } from '../data/mock';
+
+const mockNotifications: AppNotification[] = [
+  { id: 'notif-1', title: 'New order received', message: 'Order #ORD-8921 was just placed.', time: '5m ago', isRead: false, type: 'success' },
+  { id: 'notif-2', title: 'Server update', message: 'System maintenance scheduled for tonight.', time: '2h ago', isRead: false, type: 'info' },
+  { id: 'notif-3', title: 'Payment failed', message: 'Failed to process payment for #ORD-8919.', time: '1d ago', isRead: true, type: 'error' },
+];
 
 interface AppState {
   theme: 'light' | 'dark';
   setTheme: (theme: 'light' | 'dark') => void;
+  isAuthenticated: boolean;
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
@@ -22,10 +29,15 @@ interface AppState {
   activities: Activity[];
   revenueData: any[];
   salesData: any[];
+  notifications: AppNotification[];
   
   // Actions
   addCustomer: (customer: Customer) => void;
   addOrder: (order: Order) => void;
+  deleteOrder: (id: string) => void;
+  markAllNotificationsAsRead: () => void;
+  clearAllNotifications: () => void;
+  addNotification: (notification: AppNotification) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -38,9 +50,10 @@ export const useAppStore = create<AppState>((set) => ({
       document.documentElement.classList.remove('dark');
     }
   },
-  user: { id: '1', name: 'Alex Doe', email: 'alex@jemxcrm.com', role: 'Admin' }, // Pre-logged in for demo
-  login: (user) => set({ user }),
-  logout: () => set({ user: null }),
+  isAuthenticated: false,
+  user: null, // Start logged out
+  login: (user) => set({ user, isAuthenticated: true }),
+  logout: () => set({ user: null, isAuthenticated: false }),
   updateUser: (data) => set((state) => ({ user: state.user ? { ...state.user, ...data } : null })),
   sidebarOpen: true,
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
@@ -55,6 +68,7 @@ export const useAppStore = create<AppState>((set) => ({
   activities: mockActivities,
   revenueData: revenueData,
   salesData: salesData,
+  notifications: mockNotifications,
   
   addCustomer: (customer) => set((state) => ({ 
     customers: [customer, ...state.customers],
@@ -63,5 +77,16 @@ export const useAppStore = create<AppState>((set) => ({
   addOrder: (order) => set((state) => ({ 
     orders: [order, ...state.orders],
     activities: [{ id: `act-${Date.now()}`, title: `New order from ${order.customerName}`, timestamp: 'Just now', type: 'order' }, ...state.activities]
+  })),
+  deleteOrder: (id) => set((state) => ({
+    orders: state.orders.filter(order => order.id !== id),
+    activities: [{ id: `act-${Date.now()}`, title: `Order ${id} deleted`, timestamp: 'Just now', type: 'system' }, ...state.activities]
+  })),
+  markAllNotificationsAsRead: () => set((state) => ({
+    notifications: state.notifications.map(n => ({ ...n, isRead: true }))
+  })),
+  clearAllNotifications: () => set({ notifications: [] }),
+  addNotification: (notification) => set((state) => ({
+    notifications: [notification, ...state.notifications]
   })),
 }));
