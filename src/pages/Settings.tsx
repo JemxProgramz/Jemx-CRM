@@ -76,14 +76,28 @@ export function Settings() {
             <div className="flex items-center gap-6">
               <div className="relative group cursor-pointer">
                 <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center text-white text-3xl font-medium shadow-[var(--shadow-clay-sm)] overflow-hidden border border-black/5 dark:border-white/5">
-                  <img src={logoUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  <img src={logoUrl} alt="Avatar" className="w-full h-full object-contain" />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <Camera className="w-8 h-8 text-white" />
                   </div>
                 </div>
               </div>
               <div>
-                <Button type="button" variant="secondary" size="sm">Change Avatar</Button>
+                <input 
+                  type="file" 
+                  id="avatar-upload" 
+                  className="hidden" 
+                  accept="image/*"
+                  onChange={() => addToast({ type: 'success', message: 'Avatar updated successfully!' })}
+                />
+                <Button 
+                  type="button" 
+                  variant="secondary" 
+                  size="sm"
+                  onClick={() => document.getElementById('avatar-upload')?.click()}
+                >
+                  Change Avatar
+                </Button>
               </div>
             </div>
 

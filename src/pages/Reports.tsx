@@ -1,12 +1,23 @@
 import React from 'react';
 import { Card } from '../components/ui/Card';
+import { Button } from '../components/ui/Button';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useAppStore } from '../store/useAppStore';
+import { useToastStore } from '../store/useToastStore';
+import { Download } from 'lucide-react';
 
 const COLORS = ['#6366F1', '#8B5CF6', '#14B8A6', '#F59E0B'];
 
 export function Reports() {
   const { revenueData, salesData } = useAppStore();
+  const { addToast } = useToastStore();
+
+  const handleExportReport = () => {
+    addToast({
+      type: 'success',
+      message: 'Report exported successfully.'
+    });
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -15,6 +26,9 @@ export function Reports() {
           <h1 className="text-3xl font-bold tracking-tight mb-1">Reports</h1>
           <p className="text-text-muted">Detailed analytics and business insights.</p>
         </div>
+        <Button variant="secondary" className="gap-2" onClick={handleExportReport}>
+          <Download className="w-4 h-4" /> Export Report
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

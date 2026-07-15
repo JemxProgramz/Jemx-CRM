@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   createColumnHelper,
   flexRender,
@@ -9,18 +9,181 @@ import {
   getFilteredRowModel,
   SortingState,
 } from '@tanstack/react-table';
-import { ChevronDown, ChevronUp, MoreHorizontal, Search, Download } from 'lucide-react';
+import { ChevronDown, ChevronUp, MoreHorizontal, Search, Download, Pencil, Trash2, Eye } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { Modal } from '../components/ui/Modal';
 import { Order } from '../types';
 import { useAppStore } from '../store/useAppStore';
 import { useToastStore } from '../store/useToastStore';
 import { format } from 'date-fns';
 
-import { Trash2 } from 'lucide-react';
-
 const columnHelper = createColumnHelper<Order>();
+
+const OrderActions = ({ order }: { order: Order }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const { deleteOrder, updateOrder } = useAppStore();
+  const { addToast } = useToastStore();
+  
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    updateOrder(order.id, {
+      customerName: formData.get('customerName') as string,
+      amount: Number(formData.get('amount')),
+      status: formData.get('status') as 'Completed' | 'Pending' | 'Processing' | 'Cancelled',
+      paymentMethod: formData.get('paymentMethod') as string
+    });
+    addToast({ type: 'success', message: `Order ${order.id} was updated successfully.` });
+    setIsEditOpen(false);
+  };
+
+  return (
+    <>
+      <div className="relative" ref={menuRef}>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-8 w-8 text-text-muted hover:text-text"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <MoreHorizontal className="w-4 h-4" />
+        </Button>
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, transformOrigin: "top right" }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.1 }}
+              className="absolute right-0 top-10 w-48 bg-card rounded-xl shadow-[var(--shadow-clay-hover)] border border-black/5 dark:border-white/5 z-50 overflow-hidden"
+            >
+              <div className="py-1">
+                <button 
+                  className="w-full text-left px-4 py-2 text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsViewOpen(true);
+                  }}
+                >
+                  <Eye className="w-4 h-4 text-secondary" /> View Details
+                </button>
+                <button 
+                  className="w-full text-left px-4 py-2 text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsEditOpen(true);
+                  }}
+                >
+                  <Pencil className="w-4 h-4 text-primary" /> Edit
+                </button>
+                <button 
+                  className="w-full text-left px-4 py-2 text-sm text-danger hover:bg-danger/10 flex items-center gap-2 transition-colors"
+                  onClick={() => {
+                    deleteOrder(order.id);
+                    addToast({ type: 'success', message: `Order ${order.id} was deleted.` });
+                  }}
+                >
+                  <Trash2 className="w-4 h-4" /> Delete
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <Modal isOpen={isViewOpen} onClose={() => setIsViewOpen(false)} title={`Order Details: ${order.id}`}>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <span className="text-sm text-text-muted">Customer Name</span>
+              <p className="font-medium">{order.customerName}</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-sm text-text-muted">Amount</span>
+              <p className="font-medium">${order.amount.toFixed(2)}</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-sm text-text-muted">Date</span>
+              <p className="font-medium">{format(new Date(order.date), 'MMM d, yyyy')}</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-sm text-text-muted">Payment Method</span>
+              <p className="font-medium">{order.paymentMethod}</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-sm text-text-muted">Status</span>
+              <p className="font-medium">
+                <span className={`px-2 py-1 rounded-full text-xs font-medium shadow-[var(--shadow-clay-sm)] ${
+                  order.status === 'Completed' ? 'bg-success/10 text-success' :
+                  order.status === 'Pending' ? 'bg-warning/10 text-warning' :
+                  order.status === 'Processing' ? 'bg-primary/10 text-primary' :
+                  'bg-danger/10 text-danger'
+                }`}>
+                  {order.status}
+                </span>
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end pt-4">
+            <Button variant="secondary" onClick={() => setIsViewOpen(false)}>Close</Button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} title="Edit Order">
+        <form onSubmit={handleEditSubmit} className="space-y-4">
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Customer Name</label>
+            <Input name="customerName" defaultValue={order.customerName} required placeholder="John Doe" />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Amount ($)</label>
+            <Input name="amount" type="number" step="0.01" defaultValue={order.amount} required placeholder="99.99" />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Payment Method</label>
+            <select name="paymentMethod" defaultValue={order.paymentMethod} className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+              <option value="Credit Card">Credit Card</option>
+              <option value="PayPal">PayPal</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Stripe">Stripe</option>
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Status</label>
+            <select name="status" defaultValue={order.status} className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+              <option value="Completed">Completed</option>
+              <option value="Pending">Pending</option>
+              <option value="Processing">Processing</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2 pt-4">
+            <Button type="button" variant="secondary" onClick={() => setIsEditOpen(false)}>Cancel</Button>
+            <Button type="submit">Save Changes</Button>
+          </div>
+        </form>
+      </Modal>
+    </>
+  );
+};
+
 const columns = [
   columnHelper.accessor('id', {
     header: 'Order ID',
@@ -61,22 +224,7 @@ const columns = [
   }),
   columnHelper.display({
     id: 'actions',
-    cell: (info) => (
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="h-8 w-8 text-danger hover:text-white hover:bg-danger"
-        onClick={() => {
-          useAppStore.getState().deleteOrder(info.row.original.id);
-          useToastStore.getState().addToast({
-            type: 'success',
-            message: `Order ${info.row.original.id} was deleted.`
-          });
-        }}
-      >
-        <Trash2 className="w-4 h-4" />
-      </Button>
-    ),
+    cell: (info) => <OrderActions order={info.row.original} />,
   }),
 ];
 
@@ -84,6 +232,28 @@ export function Orders() {
   const { orders: data } = useAppStore();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [localSearch, setLocalSearch] = useState('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const handleAddOrder = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const newOrder: Order = {
+      id: `ORD-${Math.floor(Math.random() * 10000)}`,
+      customerId: `cust-${Date.now()}`,
+      customerName: formData.get('customerName') as string,
+      amount: Number(formData.get('amount')),
+      date: new Date().toISOString(),
+      status: formData.get('status') as 'Completed' | 'Pending' | 'Processing' | 'Cancelled',
+      paymentMethod: formData.get('paymentMethod') as string
+    };
+    
+    useAppStore.getState().addOrder(newOrder);
+    useToastStore.getState().addToast({
+      type: 'success',
+      message: `Order ${newOrder.id} was added successfully.`
+    });
+    setIsAddModalOpen(false);
+  };
 
   const handleExportCSV = () => {
     const headers = ['Order ID', 'Customer', 'Amount', 'Date', 'Status', 'Payment'];
@@ -135,9 +305,12 @@ export function Orders() {
           <h1 className="text-3xl font-bold tracking-tight mb-1">Orders</h1>
           <p className="text-text-muted">Track and manage recent transactions.</p>
         </div>
-        <Button variant="secondary" className="gap-2" onClick={handleExportCSV}>
-          <Download className="w-4 h-4" /> Export CSV
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" className="gap-2" onClick={handleExportCSV}>
+            <Download className="w-4 h-4" /> Export CSV
+          </Button>
+          <Button onClick={() => setIsAddModalOpen(true)}>Add Order</Button>
+        </div>
       </div>
 
       <Card className="flex flex-col p-0 overflow-hidden">
@@ -222,6 +395,41 @@ export function Orders() {
           </div>
         </div>
       </Card>
+
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Add New Order">
+        <form onSubmit={handleAddOrder} className="space-y-4">
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Customer Name</label>
+            <Input name="customerName" required placeholder="John Doe" />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Amount ($)</label>
+            <Input name="amount" type="number" step="0.01" required placeholder="99.99" />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Payment Method</label>
+            <select name="paymentMethod" className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+              <option value="Credit Card">Credit Card</option>
+              <option value="PayPal">PayPal</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Stripe">Stripe</option>
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Status</label>
+            <select name="status" className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+              <option value="Completed">Completed</option>
+              <option value="Pending">Pending</option>
+              <option value="Processing">Processing</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2 pt-4">
+            <Button type="button" variant="secondary" onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
+            <Button type="submit">Add Order</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

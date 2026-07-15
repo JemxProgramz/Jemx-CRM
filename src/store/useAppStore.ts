@@ -1,12 +1,6 @@
 import { create } from 'zustand';
-import { User, Customer, Order, Activity, AppNotification } from '../types';
+import { User, Customer, Order, Activity } from '../types';
 import { mockCustomers, mockOrders, mockActivities, revenueData, salesData } from '../data/mock';
-
-const mockNotifications: AppNotification[] = [
-  { id: 'notif-1', title: 'New order received', message: 'Order #ORD-8921 was just placed.', time: '5m ago', isRead: false, type: 'success' },
-  { id: 'notif-2', title: 'Server update', message: 'System maintenance scheduled for tonight.', time: '2h ago', isRead: false, type: 'info' },
-  { id: 'notif-3', title: 'Payment failed', message: 'Failed to process payment for #ORD-8919.', time: '1d ago', isRead: true, type: 'error' },
-];
 
 interface AppState {
   theme: 'light' | 'dark';
@@ -29,15 +23,15 @@ interface AppState {
   activities: Activity[];
   revenueData: any[];
   salesData: any[];
-  notifications: AppNotification[];
   
   // Actions
   addCustomer: (customer: Customer) => void;
+  updateCustomer: (id: string, data: Partial<Customer>) => void;
+  deleteCustomer: (id: string) => void;
   addOrder: (order: Order) => void;
+  updateOrder: (id: string, data: Partial<Order>) => void;
   deleteOrder: (id: string) => void;
-  markAllNotificationsAsRead: () => void;
-  clearAllNotifications: () => void;
-  addNotification: (notification: AppNotification) => void;
+  clearActivities: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -68,25 +62,33 @@ export const useAppStore = create<AppState>((set) => ({
   activities: mockActivities,
   revenueData: revenueData,
   salesData: salesData,
-  notifications: mockNotifications,
   
   addCustomer: (customer) => set((state) => ({ 
     customers: [customer, ...state.customers],
     activities: [{ id: `act-${Date.now()}`, title: `New customer ${customer.name} added`, timestamp: 'Just now', type: 'user' }, ...state.activities]
   })),
+  updateCustomer: (id, data) => set((state) => ({
+    customers: state.customers.map(c => c.id === id ? { ...c, ...data } : c),
+    activities: [{ id: `act-${Date.now()}`, title: `Customer ${data.name || id} updated`, timestamp: 'Just now', type: 'user' }, ...state.activities]
+  })),
+  deleteCustomer: (id) => set((state) => {
+    const customer = state.customers.find(c => c.id === id);
+    return {
+      customers: state.customers.filter(c => c.id !== id),
+      activities: [{ id: `act-${Date.now()}`, title: `Customer ${customer?.name || id} deleted`, timestamp: 'Just now', type: 'system' }, ...state.activities]
+    };
+  }),
   addOrder: (order) => set((state) => ({ 
     orders: [order, ...state.orders],
     activities: [{ id: `act-${Date.now()}`, title: `New order from ${order.customerName}`, timestamp: 'Just now', type: 'order' }, ...state.activities]
   })),
+  updateOrder: (id, data) => set((state) => ({
+    orders: state.orders.map(o => o.id === id ? { ...o, ...data } : o),
+    activities: [{ id: `act-${Date.now()}`, title: `Order ${id} updated`, timestamp: 'Just now', type: 'order' }, ...state.activities]
+  })),
   deleteOrder: (id) => set((state) => ({
-    orders: state.orders.filter(order => order.id !== id),
+    orders: state.orders.filter(o => o.id !== id),
     activities: [{ id: `act-${Date.now()}`, title: `Order ${id} deleted`, timestamp: 'Just now', type: 'system' }, ...state.activities]
   })),
-  markAllNotificationsAsRead: () => set((state) => ({
-    notifications: state.notifications.map(n => ({ ...n, isRead: true }))
-  })),
-  clearAllNotifications: () => set({ notifications: [] }),
-  addNotification: (notification) => set((state) => ({
-    notifications: [notification, ...state.notifications]
-  })),
+  clearActivities: () => set({ activities: [] }),
 }));

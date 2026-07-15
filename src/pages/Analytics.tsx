@@ -2,8 +2,11 @@ import React from 'react';
 import { DollarSign, Users, Activity, BarChart2 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, LineChart, Line, ComposedChart } from 'recharts';
 import { Card } from '../components/ui/Card';
+import { Button } from '../components/ui/Button';
 import { KPICard } from '../components/dashboard/KPICard';
 import { useAppStore } from '../store/useAppStore';
+import { useToastStore } from '../store/useToastStore';
+import { Download } from 'lucide-react';
 
 export function Analytics() {
   const { revenueData, orders, customers } = useAppStore();
@@ -23,6 +26,15 @@ export function Analytics() {
     churned: d.total * 0.05 + Math.floor(Math.random() * 50)
   }));
 
+  const { addToast } = useToastStore();
+
+  const handleExportAnalytics = () => {
+    addToast({
+      type: 'success',
+      message: 'Analytics data exported successfully.'
+    });
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
@@ -30,6 +42,9 @@ export function Analytics() {
           <h1 className="text-3xl font-bold tracking-tight mb-1">Analytics</h1>
           <p className="text-text-muted">Deep dive into your business metrics.</p>
         </div>
+        <Button variant="secondary" className="gap-2" onClick={handleExportAnalytics}>
+          <Download className="w-4 h-4" /> Export Analytics
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
