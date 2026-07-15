@@ -59,7 +59,7 @@ const OrderActions = ({ order }: { order: Order }) => {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="h-8 w-8 text-text-muted hover:text-text"
+          className="text-text-muted hover:text-text"
           onClick={() => setIsOpen(!isOpen)}
         >
           <MoreHorizontal className="w-4 h-4" />
@@ -75,7 +75,7 @@ const OrderActions = ({ order }: { order: Order }) => {
             >
               <div className="py-1">
                 <button 
-                  className="w-full text-left px-4 py-2 text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
+                  className="w-full text-left px-4 py-3 min-h-[44px] text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
                   onClick={() => {
                     setIsOpen(false);
                     setIsViewOpen(true);
@@ -84,7 +84,7 @@ const OrderActions = ({ order }: { order: Order }) => {
                   <Eye className="w-4 h-4 text-secondary" /> View Details
                 </button>
                 <button 
-                  className="w-full text-left px-4 py-2 text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
+                  className="w-full text-left px-4 py-3 min-h-[44px] text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
                   onClick={() => {
                     setIsOpen(false);
                     setIsEditOpen(true);
@@ -93,7 +93,7 @@ const OrderActions = ({ order }: { order: Order }) => {
                   <Pencil className="w-4 h-4 text-primary" /> Edit
                 </button>
                 <button 
-                  className="w-full text-left px-4 py-2 text-sm text-danger hover:bg-danger/10 flex items-center gap-2 transition-colors"
+                  className="w-full text-left px-4 py-3 min-h-[44px] text-sm text-danger hover:bg-danger/10 flex items-center gap-2 transition-colors"
                   onClick={() => {
                     deleteOrder(order.id);
                     addToast({ type: 'success', message: `Order ${order.id} was deleted.` });
@@ -109,7 +109,7 @@ const OrderActions = ({ order }: { order: Order }) => {
 
       <Modal isOpen={isViewOpen} onClose={() => setIsViewOpen(false)} title={`Order Details: ${order.id}`}>
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <span className="text-sm text-text-muted">Customer Name</span>
               <p className="font-medium">{order.customerName}</p>
@@ -158,7 +158,7 @@ const OrderActions = ({ order }: { order: Order }) => {
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium">Payment Method</label>
-            <select name="paymentMethod" defaultValue={order.paymentMethod} className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+            <select name="paymentMethod" defaultValue={order.paymentMethod} className="flex min-h-[44px] w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
               <option value="Credit Card">Credit Card</option>
               <option value="PayPal">PayPal</option>
               <option value="Bank Transfer">Bank Transfer</option>
@@ -167,7 +167,7 @@ const OrderActions = ({ order }: { order: Order }) => {
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium">Status</label>
-            <select name="status" defaultValue={order.status} className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+            <select name="status" defaultValue={order.status} className="flex min-h-[44px] w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
               <option value="Completed">Completed</option>
               <option value="Pending">Pending</option>
               <option value="Processing">Processing</option>
@@ -326,7 +326,7 @@ export function Orders() {
           </div>
         </div>
 
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto w-full pb-4">
           <div className="inline-block min-w-full align-middle">
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
@@ -335,7 +335,7 @@ export function Orders() {
                     {headerGroup.headers.map((header, index) => (
                       <th 
                         key={header.id} 
-                        className={`py-4 px-2 font-semibold text-text-muted cursor-pointer hover:text-text transition-colors ${index === 0 ? 'pl-6' : ''} ${index === headerGroup.headers.length - 1 ? 'pr-6' : ''}`}
+                        className={`py-4 px-2 font-semibold text-text-muted cursor-pointer hover:text-text transition-colors ${index === 0 ? 'pl-6 sticky left-0 bg-card z-10 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]' : ''} ${index === headerGroup.headers.length - 1 ? 'pr-6' : ''}`}
                         onClick={header.column.getToggleSortingHandler()}
                       >
                       <div className="flex items-center gap-2">
@@ -360,7 +360,7 @@ export function Orders() {
                   className="border-b border-black/5 dark:border-white/5 last:border-0 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group"
                 >
                   {row.getVisibleCells().map((cell, index) => (
-                    <td key={cell.id} className={`py-4 px-2 ${index === 0 ? 'pl-6' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-6' : ''}`}>
+                    <td key={cell.id} className={`py-4 px-2 ${index === 0 ? 'pl-6 sticky left-0 bg-card group-hover:bg-black/5 dark:group-hover:bg-white/5 z-10 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] transition-colors' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-6' : ''}`}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -408,7 +408,7 @@ export function Orders() {
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium">Payment Method</label>
-            <select name="paymentMethod" className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+            <select name="paymentMethod" className="flex min-h-[44px] w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
               <option value="Credit Card">Credit Card</option>
               <option value="PayPal">PayPal</option>
               <option value="Bank Transfer">Bank Transfer</option>
@@ -417,7 +417,7 @@ export function Orders() {
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium">Status</label>
-            <select name="status" className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+            <select name="status" className="flex min-h-[44px] w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
               <option value="Completed">Completed</option>
               <option value="Pending">Pending</option>
               <option value="Processing">Processing</option>

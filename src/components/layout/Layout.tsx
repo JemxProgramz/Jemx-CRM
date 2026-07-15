@@ -6,6 +6,7 @@ import { ToastContainer } from '../ui/Toast';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const setSidebarOpen = useAppStore(state => state.setSidebarOpen);
+  const randomizeData = useAppStore(state => state.randomizeData);
 
   useEffect(() => {
     const handleResize = () => {
@@ -20,11 +21,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
     handleResize();
 
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [setSidebarOpen]);
+    
+    const interval = setInterval(() => {
+      randomizeData();
+    }, 10000);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearInterval(interval);
+    };
+  }, [setSidebarOpen, randomizeData]);
 
   return (
-    <div className="flex h-screen w-full relative z-0">
+    <div className="flex h-[100dvh] w-full relative z-0">
       <ToastContainer />
       <div className="blob-bg">
         <div className="blob blob-1"></div>

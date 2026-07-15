@@ -41,7 +41,7 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 relative z-0">
+    <div className="min-h-[100dvh] w-full flex items-center justify-center p-4 relative z-0">
       <div className="blob-bg">
         <div className="blob blob-1"></div>
         <div className="blob blob-2"></div>
@@ -61,7 +61,6 @@ export function Login() {
             </div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">Welcome Back</h1>
             <p className="text-text-muted">Sign in to Jemx CRM to continue</p>
-            <p className="text-xs text-text-muted mt-2">Hint: Use <strong>admin@jemxcrm.com</strong> / <strong>password123</strong></p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

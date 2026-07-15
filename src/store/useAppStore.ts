@@ -32,6 +32,7 @@ interface AppState {
   updateOrder: (id: string, data: Partial<Order>) => void;
   deleteOrder: (id: string) => void;
   clearActivities: () => void;
+  randomizeData: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -91,4 +92,17 @@ export const useAppStore = create<AppState>((set) => ({
     activities: [{ id: `act-${Date.now()}`, title: `Order ${id} deleted`, timestamp: 'Just now', type: 'system' }, ...state.activities]
   })),
   clearActivities: () => set({ activities: [] }),
+  randomizeData: () => set((state) => {
+    const newRevenueData = state.revenueData.map(d => ({
+      ...d,
+      total: Math.max(0, d.total + (Math.random() - 0.5) * 2000),
+    }));
+    
+    const newSalesData = state.salesData.map(d => ({
+      ...d,
+      value: Math.max(0, d.value + Math.floor((Math.random() - 0.5) * 50)),
+    }));
+    
+    return { revenueData: newRevenueData, salesData: newSalesData };
+  }),
 }));

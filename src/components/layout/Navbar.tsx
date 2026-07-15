@@ -31,16 +31,16 @@ export function Navbar() {
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2 bg-card p-1.5 rounded-full shadow-[var(--shadow-clay-sm)]">
           <button 
-            className={`p-2.5 rounded-full transition-all ${theme === 'light' ? 'bg-background shadow-[var(--shadow-clay-active)] text-primary' : 'text-text-muted hover:text-text'}`}
+            className={`w-11 h-11 flex items-center justify-center rounded-full transition-all ${theme === 'light' ? 'bg-background shadow-[var(--shadow-clay-active)] text-primary' : 'text-text-muted hover:text-text'}`}
             onClick={() => setTheme('light')}
           >
-            <Sun className="w-4 h-4" />
+            <Sun className="w-5 h-5" />
           </button>
           <button 
-            className={`p-2.5 rounded-full transition-all ${theme === 'dark' ? 'bg-background shadow-[var(--shadow-clay-active)] text-primary' : 'text-text-muted hover:text-text'}`}
+            className={`w-11 h-11 flex items-center justify-center rounded-full transition-all ${theme === 'dark' ? 'bg-background shadow-[var(--shadow-clay-active)] text-primary' : 'text-text-muted hover:text-text'}`}
             onClick={() => setTheme('dark')}
           >
-            <Moon className="w-4 h-4" />
+            <Moon className="w-5 h-5" />
           </button>
         </div>
         

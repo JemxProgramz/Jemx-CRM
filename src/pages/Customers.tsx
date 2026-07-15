@@ -60,7 +60,7 @@ const CustomerActions = ({ customer }: { customer: Customer }) => {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="h-8 w-8 text-text-muted hover:text-text"
+          className="text-text-muted hover:text-text"
           onClick={() => setIsOpen(!isOpen)}
         >
           <MoreHorizontal className="w-4 h-4" />
@@ -76,7 +76,7 @@ const CustomerActions = ({ customer }: { customer: Customer }) => {
             >
               <div className="py-1">
                 <button 
-                  className="w-full text-left px-4 py-2 text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
+                  className="w-full text-left px-4 py-3 min-h-[44px] text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
                   onClick={() => {
                     setIsOpen(false);
                     setIsEditOpen(true);
@@ -85,7 +85,7 @@ const CustomerActions = ({ customer }: { customer: Customer }) => {
                   <Pencil className="w-4 h-4 text-primary" /> Edit
                 </button>
                 <button 
-                  className="w-full text-left px-4 py-2 text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
+                  className="w-full text-left px-4 py-3 min-h-[44px] text-sm text-text hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
                   onClick={() => {
                     setIsOpen(false);
                     window.location.href = `mailto:${customer.email}`;
@@ -94,7 +94,7 @@ const CustomerActions = ({ customer }: { customer: Customer }) => {
                   <Mail className="w-4 h-4 text-success" /> Email
                 </button>
                 <button 
-                  className="w-full text-left px-4 py-2 text-sm text-danger hover:bg-danger/10 flex items-center gap-2 transition-colors"
+                  className="w-full text-left px-4 py-3 min-h-[44px] text-sm text-danger hover:bg-danger/10 flex items-center gap-2 transition-colors"
                   onClick={() => {
                     deleteCustomer(customer.id);
                     addToast({ type: 'success', message: `${customer.name} was deleted.` });
@@ -126,10 +126,10 @@ const CustomerActions = ({ customer }: { customer: Customer }) => {
             <label className="text-sm font-medium">Country</label>
             <Input name="country" defaultValue={customer.country} required placeholder="United States" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-sm font-medium">Plan</label>
-              <select name="plan" defaultValue={customer.plan} className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+              <select name="plan" defaultValue={customer.plan} className="flex min-h-[44px] w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
                 <option value="Basic">Basic</option>
                 <option value="Pro">Pro</option>
                 <option value="Enterprise">Enterprise</option>
@@ -137,7 +137,7 @@ const CustomerActions = ({ customer }: { customer: Customer }) => {
             </div>
             <div className="space-y-1">
               <label className="text-sm font-medium">Status</label>
-              <select name="status" defaultValue={customer.status} className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+              <select name="status" defaultValue={customer.status} className="flex min-h-[44px] w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
                 <option value="Active">Active</option>
                 <option value="Lead">Lead</option>
                 <option value="Inactive">Inactive</option>
@@ -273,7 +273,7 @@ export function Customers() {
           </div>
         </div>
 
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto w-full pb-4">
           <div className="inline-block min-w-full align-middle">
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
@@ -282,7 +282,7 @@ export function Customers() {
                     {headerGroup.headers.map((header, index) => (
                       <th 
                         key={header.id} 
-                        className={`py-4 px-2 font-semibold text-text-muted cursor-pointer hover:text-text transition-colors ${index === 0 ? 'pl-6' : ''} ${index === headerGroup.headers.length - 1 ? 'pr-6' : ''}`}
+                        className={`py-4 px-2 font-semibold text-text-muted cursor-pointer hover:text-text transition-colors ${index === 0 ? 'pl-6 sticky left-0 bg-card z-10 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]' : ''} ${index === headerGroup.headers.length - 1 ? 'pr-6' : ''}`}
                         onClick={header.column.getToggleSortingHandler()}
                       >
                       <div className="flex items-center gap-2">
@@ -307,7 +307,7 @@ export function Customers() {
                   className="border-b border-black/5 dark:border-white/5 last:border-0 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group"
                 >
                   {row.getVisibleCells().map((cell, index) => (
-                    <td key={cell.id} className={`py-4 px-2 ${index === 0 ? 'pl-6' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-6' : ''}`}>
+                    <td key={cell.id} className={`py-4 px-2 ${index === 0 ? 'pl-6 sticky left-0 bg-card group-hover:bg-black/5 dark:group-hover:bg-white/5 z-10 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] transition-colors' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-6' : ''}`}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -361,10 +361,10 @@ export function Customers() {
             <label className="text-sm font-medium">Country</label>
             <Input name="country" required placeholder="United States" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-sm font-medium">Plan</label>
-              <select name="plan" className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+              <select name="plan" className="flex min-h-[44px] w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
                 <option value="Basic">Basic</option>
                 <option value="Pro">Pro</option>
                 <option value="Enterprise">Enterprise</option>
@@ -372,7 +372,7 @@ export function Customers() {
             </div>
             <div className="space-y-1">
               <label className="text-sm font-medium">Status</label>
-              <select name="status" className="flex h-10 w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
+              <select name="status" className="flex min-h-[44px] w-full rounded-[14px] border border-black/10 dark:border-white/10 bg-background px-3 py-2 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-inner" required>
                 <option value="Active">Active</option>
                 <option value="Lead">Lead</option>
                 <option value="Inactive">Inactive</option>
