@@ -48,13 +48,11 @@ export function Settings() {
   });
 
   const onProfileSave = async (data: ProfileForm) => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
     updateUser({ name: data.name, email: data.email, role: data.role });
     addToast({ type: 'success', message: 'Profile updated successfully!' });
   };
 
   const onPasswordSave = async (data: PasswordForm) => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
     addToast({ type: 'success', message: 'Password updated successfully!' });
     resetPassword();
   };

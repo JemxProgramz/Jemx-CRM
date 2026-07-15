@@ -13,6 +13,9 @@ interface AppState {
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
   
+  globalSearchQuery: string;
+  setGlobalSearchQuery: (query: string) => void;
+  
   // Data
   customers: Customer[];
   orders: Order[];
@@ -42,6 +45,9 @@ export const useAppStore = create<AppState>((set) => ({
   sidebarOpen: true,
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
   setSidebarOpen: (sidebarOpen) => set({ sidebarOpen }),
+  
+  globalSearchQuery: '',
+  setGlobalSearchQuery: (globalSearchQuery) => set({ globalSearchQuery }),
   
   // Initial Data
   customers: mockCustomers,

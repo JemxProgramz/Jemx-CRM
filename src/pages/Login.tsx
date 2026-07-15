@@ -8,6 +8,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { useAppStore } from '../store/useAppStore';
+import logoUrl from '../assets/logo.jpg';
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -25,8 +26,6 @@ export function Login() {
   });
 
   const onSubmit = async (data: LoginForm) => {
-    // Simulate network request
-    await new Promise(resolve => setTimeout(resolve, 1500));
     login({ id: '1', name: 'Alex Doe', email: data.email, role: 'Admin' });
   };
 
@@ -46,8 +45,8 @@ export function Login() {
       >
         <Card className="p-8 md:p-10 !rounded-[40px] shadow-[var(--shadow-clay-hover)] bg-card/80 backdrop-blur-xl border border-white/20">
           <div className="text-center mb-10">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary to-secondary rounded-[20px] flex items-center justify-center shadow-[var(--shadow-clay-sm)] mb-6 transform rotate-3">
-              <span className="text-white font-bold text-3xl -rotate-3">J</span>
+            <div className="w-16 h-16 mx-auto rounded-[20px] flex items-center justify-center shadow-[var(--shadow-clay-sm)] mb-6 overflow-hidden bg-white">
+              <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">Welcome Back</h1>
             <p className="text-text-muted">Sign in to Jemx CRM to continue</p>

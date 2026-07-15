@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { LayoutDashboard, Users, ShoppingCart, BarChart3, FileText, Settings, LogOut, ChevronLeft } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import { cn } from '../../lib/utils';
+import logoUrl from '../../assets/logo.jpg';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -38,8 +39,8 @@ export function Sidebar() {
         )}
       >
       <div className={cn("flex items-center mb-12 overflow-hidden transition-all", sidebarOpen ? "px-2" : "justify-center px-0")}>
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 shadow-[var(--shadow-clay-sm)]">
-          <span className="text-white font-bold text-xl">J</span>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-[var(--shadow-clay-sm)] overflow-hidden bg-white">
+          <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
         </div>
         <AnimatePresence initial={false}>
           {sidebarOpen && (

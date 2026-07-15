@@ -6,13 +6,13 @@ import {
   useReactTable,
   getPaginationRowModel,
   getSortedRowModel,
+  getFilteredRowModel,
   SortingState,
 } from '@tanstack/react-table';
 import { ChevronDown, ChevronUp, MoreHorizontal, Search } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Skeleton } from '../components/ui/Skeleton';
 import { Customer } from '../types';
 import { useAppStore } from '../store/useAppStore';
 import { useToastStore } from '../store/useToastStore';
@@ -78,17 +78,8 @@ const columns = [
 ];
 
 export function Customers() {
-  const data = useAppStore(state => state.customers);
+  const { customers: data, globalSearchQuery, setGlobalSearchQuery } = useAppStore();
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleAddCustomer = () => {
     const newCustomer: Customer = {
@@ -112,12 +103,13 @@ export function Customers() {
     columns,
     state: {
       sorting,
-      globalFilter,
+      globalFilter: globalSearchQuery,
     },
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
+    onGlobalFilterChange: setGlobalSearchQuery,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
 
@@ -137,24 +129,25 @@ export function Customers() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
             <Input 
               placeholder="Search customers..." 
-              value={globalFilter ?? ''}
-              onChange={e => setGlobalFilter(e.target.value)}
+              value={globalSearchQuery ?? ''}
+              onChange={e => setGlobalSearchQuery(e.target.value)}
               className="pl-12"
             />
           </div>
         </div>
 
-        <div className="overflow-x-auto px-6">
-          <table className="w-full text-left border-collapse min-w-[800px]">
-            <thead>
-              {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id} className="border-b border-black/5 dark:border-white/5">
-                  {headerGroup.headers.map(header => (
-                    <th 
-                      key={header.id} 
-                      className="py-4 px-2 font-semibold text-text-muted cursor-pointer hover:text-text transition-colors"
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
+        <div className="overflow-x-auto w-full">
+          <div className="inline-block min-w-full align-middle">
+            <table className="w-full text-left border-collapse min-w-[800px]">
+              <thead>
+                {table.getHeaderGroups().map(headerGroup => (
+                  <tr key={headerGroup.id} className="border-b border-black/5 dark:border-white/5">
+                    {headerGroup.headers.map((header, index) => (
+                      <th 
+                        key={header.id} 
+                        className={`py-4 px-2 font-semibold text-text-muted cursor-pointer hover:text-text transition-colors ${index === 0 ? 'pl-6' : ''} ${index === headerGroup.headers.length - 1 ? 'pr-6' : ''}`}
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
                       <div className="flex items-center gap-2">
                         {flexRender(
                           header.column.columnDef.header,
@@ -171,45 +164,33 @@ export function Customers() {
               ))}
             </thead>
             <tbody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <tr key={i} className="border-b border-black/5 dark:border-white/5 last:border-0">
-                    <td className="py-4 px-2"><div className="flex items-center gap-3"><Skeleton className="w-10 h-10 rounded-full" /><div className="space-y-2"><Skeleton className="w-24 h-4" /><Skeleton className="w-32 h-3" /></div></div></td>
-                    <td className="py-4 px-2"><Skeleton className="w-24 h-4" /></td>
-                    <td className="py-4 px-2"><Skeleton className="w-16 h-6 rounded-full" /></td>
-                    <td className="py-4 px-2"><Skeleton className="w-20 h-6 rounded-full" /></td>
-                    <td className="py-4 px-2"><Skeleton className="w-24 h-4" /></td>
-                    <td className="py-4 px-2"><Skeleton className="w-8 h-8 rounded-md" /></td>
-                  </tr>
-                ))
-              ) : (
-                table.getRowModel().rows.map(row => (
-                  <tr 
-                    key={row.id} 
-                    className="border-b border-black/5 dark:border-white/5 last:border-0 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group"
-                  >
-                    {row.getVisibleCells().map(cell => (
-                      <td key={cell.id} className="py-4 px-2">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              )}
+              {table.getRowModel().rows.map(row => (
+                <tr 
+                  key={row.id}
+                  className="border-b border-black/5 dark:border-white/5 last:border-0 hover:bg-black/5 dark:hover:bg-white/5 transition-colors group"
+                >
+                  {row.getVisibleCells().map((cell, index) => (
+                    <td key={cell.id} className={`py-4 px-2 ${index === 0 ? 'pl-6' : ''} ${index === row.getVisibleCells().length - 1 ? 'pr-6' : ''}`}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 border-t border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5">
           <div className="text-sm text-text-muted">
-            Showing {isLoading ? 0 : table.getRowModel().rows.length} of {data.length} results
+            Showing {table.getRowModel().rows.length} of {data.length} results
           </div>
           <div className="flex items-center gap-2">
             <Button 
               variant="secondary" 
               size="sm" 
               onClick={() => table.previousPage()}
-              disabled={isLoading || !table.getCanPreviousPage()}
+              disabled={!table.getCanPreviousPage()}
             >
               Previous
             </Button>
@@ -217,7 +198,7 @@ export function Customers() {
               variant="secondary" 
               size="sm" 
               onClick={() => table.nextPage()}
-              disabled={isLoading || !table.getCanNextPage()}
+              disabled={!table.getCanNextPage()}
             >
               Next
             </Button>

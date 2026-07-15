@@ -5,7 +5,7 @@ import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 
 export function Navbar() {
-  const { theme, setTheme, user, toggleSidebar } = useAppStore();
+  const { theme, setTheme, user, toggleSidebar, globalSearchQuery, setGlobalSearchQuery } = useAppStore();
 
   return (
     <header className="h-24 w-full flex items-center justify-between px-4 md:px-8 shrink-0 z-10">
@@ -15,7 +15,12 @@ export function Navbar() {
         </Button>
         <div className="max-w-md w-full relative hidden sm:block">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
-          <Input placeholder="Search everything..." className="pl-12 bg-card border-none shadow-[var(--shadow-clay-sm)] h-14" />
+          <Input 
+            placeholder="Search everything..." 
+            value={globalSearchQuery}
+            onChange={(e) => setGlobalSearchQuery(e.target.value)}
+            className="pl-12 bg-card border-none shadow-[var(--shadow-clay-sm)] h-14" 
+          />
         </div>
       </div>
       

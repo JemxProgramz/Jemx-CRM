@@ -13,6 +13,8 @@ import { Customers } from './pages/Customers';
 import { Orders } from './pages/Orders';
 import { Settings } from './pages/Settings';
 
+import { Reports } from './pages/Reports';
+
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const user = useAppStore(state => state.user);
   if (!user) return <Navigate to="/login" replace />;
@@ -34,7 +36,7 @@ export default function App() {
         
         {/* Fallbacks for demo */}
         <Route path="/analytics" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/reports" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
         
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
