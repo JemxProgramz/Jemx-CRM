@@ -12,7 +12,7 @@ export function Skeleton({
       animate={{ opacity: [0.6, 1, 0.6] }}
       transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
       className={cn(
-        "rounded-2xl bg-black/5 dark:bg-white/10",
+        "rounded-2xl bg-transparent dark:bg-white/10",
         className
       )}
       {...props}
