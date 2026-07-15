@@ -32,9 +32,9 @@ export function Dashboard() {
             <h3 className="font-semibold text-lg">Revenue Overview</h3>
             <p className="text-sm text-text-muted">Monthly revenue performance</p>
           </div>
-          <div className="flex-1 w-full min-h-[200px]">
+          <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
-              <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={revenueData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                 <defs>
                   <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#6366F1" stopOpacity={0.3}/>
@@ -42,8 +42,8 @@ export function Dashboard() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="opacity-10" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)' }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)' }} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)' }} dy={10} tickMargin={10} minTickGap={30} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)' }} tickMargin={10} minTickGap={30} tickFormatter={(value) => value >= 1000 ? `${value / 1000}k` : value} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '16px', border: 'none', boxShadow: 'var(--shadow-clay)' }}
                   itemStyle={{ color: 'var(--text)' }}
@@ -59,7 +59,7 @@ export function Dashboard() {
             <h3 className="font-semibold text-lg">Sales by Plan</h3>
             <p className="text-sm text-text-muted">Distribution of active subscriptions</p>
           </div>
-          <div className="flex-1 w-full min-h-[200px] relative flex items-center justify-center">
+          <div className="h-64 w-full relative flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <PieChart>
                 <Pie
@@ -119,12 +119,12 @@ export function Dashboard() {
             <h3 className="font-semibold text-lg">Monthly Performance</h3>
             <p className="text-sm text-text-muted">Comparing actual vs targets</p>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
-              <BarChart data={revenueData.slice(0, 5)} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <BarChart data={revenueData.slice(0, 5)} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="opacity-10" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)' }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)' }} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)' }} dy={10} tickMargin={10} minTickGap={30} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)' }} tickMargin={10} minTickGap={30} tickFormatter={(value) => value >= 1000 ? `${value / 1000}k` : value} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '16px', border: 'none', boxShadow: 'var(--shadow-clay)' }}
                   cursor={{ fill: 'currentColor', opacity: 0.05 }}
