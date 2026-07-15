@@ -6,7 +6,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAppStore } from './store/useAppStore';
-import { Layout } from './components/layout/Layout';
+
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 const Login = React.lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));

@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+
 import { TrendingUp, TrendingDown, LucideIcon } from 'lucide-react';
 import { Card } from '../ui/Card';
 

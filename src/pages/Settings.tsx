@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -53,7 +53,7 @@ export function Settings() {
     addToast({ type: 'success', message: 'Profile updated successfully!' });
   };
 
-  const onPasswordSave = async (data: PasswordForm) => {
+  const onPasswordSave = async () => {
     addToast({ type: 'success', message: 'Password updated successfully!' });
     resetPassword();
   };

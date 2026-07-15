@@ -2,14 +2,15 @@ import React from 'react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { useAppStore } from '../store/useAppStore';
+import { useDashboardData } from '../hooks/useData';
 import { useToastStore } from '../store/useToastStore';
 import { Download } from 'lucide-react';
+import { Skeleton } from '../components/ui/Skeleton';
 
 const COLORS = ['#6366F1', '#8B5CF6', '#14B8A6', '#F59E0B'];
 
 export function Reports() {
-  const { revenueData, salesData } = useAppStore();
+  const { revenueData, salesData, isLoading } = useDashboardData();
   const { addToast } = useToastStore();
 
   const handleExportReport = () => {
@@ -38,6 +39,7 @@ export function Reports() {
             <p className="text-sm text-text-muted">Year over year growth</p>
           </div>
           <div className="h-64 w-full">
+            {isLoading ? <Skeleton className="h-full w-full" /> : (
             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <AreaChart data={revenueData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                 <defs>
@@ -56,6 +58,7 @@ export function Reports() {
                 <Area type="monotone" dataKey="total" stroke="#14B8A6" strokeWidth={3} fillOpacity={1} fill="url(#colorGrowth)" />
               </AreaChart>
             </ResponsiveContainer>
+            )}
           </div>
         </Card>
 
@@ -65,6 +68,7 @@ export function Reports() {
             <p className="text-sm text-text-muted">New customers per month</p>
           </div>
           <div className="h-64 w-full">
+            {isLoading ? <Skeleton className="h-full w-full" /> : (
             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <BarChart data={revenueData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="opacity-10" />
@@ -77,6 +81,7 @@ export function Reports() {
                 <Bar dataKey="total" fill="#8B5CF6" radius={[6, 6, 0, 0]} barSize={24} />
               </BarChart>
             </ResponsiveContainer>
+            )}
           </div>
         </Card>
       </div>
@@ -88,6 +93,7 @@ export function Reports() {
             <p className="text-sm text-text-muted">Daily active users</p>
           </div>
           <div className="h-64 w-full">
+            {isLoading ? <Skeleton className="h-full w-full" /> : (
             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <LineChart data={revenueData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="opacity-10" />
@@ -99,6 +105,7 @@ export function Reports() {
                 <Line type="monotone" dataKey="total" stroke="#F59E0B" strokeWidth={3} dot={{ r: 4, fill: '#F59E0B' }} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
+            )}
           </div>
         </Card>
 
@@ -108,6 +115,7 @@ export function Reports() {
             <p className="text-sm text-text-muted">Sales by category</p>
           </div>
           <div className="h-64 w-full relative flex items-center justify-center">
+            {isLoading ? <Skeleton className="h-48 w-48 rounded-full" /> : (
             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <PieChart>
                 <Pie
@@ -127,6 +135,7 @@ export function Reports() {
                 />
               </PieChart>
             </ResponsiveContainer>
+            )}
           </div>
         </Card>
       </div>

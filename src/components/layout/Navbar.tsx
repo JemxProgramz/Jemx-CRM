@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, Sun, Moon, Menu, ShoppingCart, Users, Activity } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
+import { useActivities } from '../../hooks/useData';
 import { Button } from '../ui/Button';
 import logoUrl from '../../assets/logo.jpg';
 import { motion, AnimatePresence } from 'motion/react';
 
 export function Navbar() {
-  const { theme, setTheme, user, toggleSidebar, globalSearchQuery, setGlobalSearchQuery, activities, clearActivities } = useAppStore();
+  const { theme, setTheme, user, toggleSidebar } = useAppStore();
+  const { data: activities } = useActivities();
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
 
@@ -101,12 +103,11 @@ export function Navbar() {
                   <div className="p-3 bg-black/5 dark:bg-white/5 text-center">
                     <button 
                       onClick={() => {
-                        clearActivities();
                         setShowNotifications(false);
                       }}
                       className="text-sm font-medium text-primary hover:underline"
                     >
-                      Mark all as read
+                      Close
                     </button>
                   </div>
                 )}

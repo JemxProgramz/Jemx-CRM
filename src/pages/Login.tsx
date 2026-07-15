@@ -35,7 +35,7 @@ export function Login() {
         // Set root form error
         setError('root', { type: 'manual', message: 'Invalid email or password' });
       }
-    } catch (err) {
+    } catch {
       setError('root', { type: 'manual', message: 'An error occurred during login' });
     }
   };
